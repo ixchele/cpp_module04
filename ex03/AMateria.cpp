@@ -14,7 +14,6 @@ AMateria::~AMateria(void) {
 	//pass
 }
 
-
 std::string const &AMateria::getType(void) const {
 	return _type;
 }
