@@ -22,6 +22,7 @@ Floor::~Floor(void) {
 Floor	&Floor::operator=(const Floor &other) {
 	if (this == &other)
 		return *this;
+
 	_head = other._head;
 	return *this;
 }

@@ -1,15 +1,12 @@
 #include <AMateria.hpp>
 
-class Cure : AMateria {
+class Cure : public AMateria {
 	private:
 		
 	public:
 		Cure(void);
-		Cure(const Cure &other);
 		~Cure(void);
 		
-		Cure	&operator=(const Cure &other);
-		
-		Cure	*clone(void) const;
+		AMateria	*clone(void) const;
 		void		use(ICharacter &target);
 };
