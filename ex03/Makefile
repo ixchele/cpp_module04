@@ -14,7 +14,7 @@ CXX = c++
 
 # --- Flags ---
 STD      = -std=c++98
-WARN     = -Wall -Wextra -Werror
+WARN     = -g3 -Wall -Wextra -Werror
 DEBUGFLG = -g -O0
 SANITIZE = -fsanitize=address,undefined
 

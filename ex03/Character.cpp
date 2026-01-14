@@ -9,16 +9,25 @@
 Character::Character(Floor *floor) : _name("Steve"), _floor(floor) {
 	for (std::size_t i = 0; i < 4; i++)
 		_inventory[i] = NULL;
+	std::cout << _name << " has joind the world" << std::endl;
 }
 
 Character::Character(const std::string &name, Floor *floor)
 	: _name(name), _floor(floor) {
 	for (std::size_t i = 0; i < 4; i++)
 		_inventory[i] = NULL;
+	std::cout << _name << " has joind the world" << std::endl;
 }
 
-Character::Character(const Character &other) {
-	*this = other;
+Character::Character(const Character &other)
+	: _name(other.getName()), _floor(other.getFloor()) {
+	for (size_t i = 0; i < 4; i++) {
+		if (other._inventory[i])
+			_inventory[i] = other._inventory[i]->clone();
+		else
+			_inventory[i] = NULL;
+	}
+	std::cout << _name << " has joind the world" << std::endl;
 }
 
 Character::~Character(void) {

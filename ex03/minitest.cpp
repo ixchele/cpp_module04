@@ -3,28 +3,59 @@
 #include <Character.hpp>
 #include <Floor.hpp>
 #include <MateriaSource.hpp>
+#include <cstdio>
 #include <iostream>
 
 int	main () {
-	// Floor	world = Floor();
-	//
-	// Character	spellcaster = Character("hamid", &world);
-	// Character	training_dummies= Character("training dummies", &world);
-	//
-	// Ice		*spell = new Ice();
-	// Cure	*potion = new Cure();
-	//
-	// spellcaster.equip(spell);
-	// spellcaster.equip(potion);
-	//
-	// spellcaster.use(0, training_dummies);
-	// spellcaster.use(1, training_dummies);
-	//
-	// spellcaster.unequip(0);
-	// spellcaster.unequip(1);
-	//
-	// spellcaster.use(0, training_dummies);
-	// spellcaster.use(1, training_dummies);
+	std::cout << "---------------- SUBJECT: ----------------" << std::endl;
+	{
+		Floor	world = Floor();
+		IMateriaSource* src = new MateriaSource();
+		src->learnMateria(new Ice());
+		src->learnMateria(new Cure());
+		std::cout << "------------------------------------------" << std::endl;
+		ICharacter* me = new Character("me", &world);
+		AMateria* tmp;
+		tmp = src->createMateria("ice");
+		me->equip(tmp);
+		tmp = src->createMateria("cure");
+		me->equip(tmp);
+		std::cout << "------------------------------------------" << std::endl;
+		ICharacter* bob = new Character("bob", &world);
+		std::cout << "------------------------------------------" << std::endl;
+		me->use(0, *bob);
+		me->use(1, *bob);
+		std::cout << "------------------------------------------" << std::endl;
+		delete bob;
+		delete me;
+		delete src;
+	}
+	std::cout << "---------- MateriaSource TESTS: ----------" << std::endl;
+	{
+		MateriaSource src1;					// Default Constructor
+		MateriaSource src2(src1);			// Copy Constructor (Deep)
+		MateriaSource *src3 = new MateriaSource();
+		std::cout << "------------------------------------------" << std::endl;
+		src2.learnMateria(new Ice);
+		src3->learnMateria(new Cure);		// Slot 0
+		src3->learnMateria(NULL);			// Invalid Materia!
+		std::cout << "------------------------------------------" << std::endl;
+		*src3 = src2;						// Copy Assignment (Deep)
+		std::cout << "------------------------------------------" << std::endl;
+		AMateria *test;
+		test = src3->createMateria("ice");	// To see if Copy was Correct
+		delete test;
+		test = src3->createMateria("cure");	// Cure not yet Learned!
+		test = src3->createMateria("Ice");	// Incorrect/Unknown Materia!
+		std::cout << "------------------------------------------" << std::endl;
+		src3->learnMateria(new Cure);		// Slot 1
+		src3->learnMateria(new Cure);		// Slot 2
+		src3->learnMateria(new Cure);		// Slot 3
+		src3->learnMateria(new Cure);		// Slots Full! 
+		std::cout << "------------------------------------------" << std::endl;
+		delete src3;
+	}
+	std::cout << "------------ Character TESTS: ------------" << std::endl;
 	{
 		Floor	world = Floor();
 		IMateriaSource* src = new MateriaSource();

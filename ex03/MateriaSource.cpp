@@ -4,18 +4,23 @@
 #include <iostream>
 #include <string>
 
-MateriaSource::MateriaSource(void) : _name("armory"){
+MateriaSource::MateriaSource(void) : _name("armory") {
 	for (std::size_t i = 0; i < 4; i++)
 		_slots[i] = NULL;
 }
 
-MateriaSource::MateriaSource(std::string const &name) : _name(name){
+MateriaSource::MateriaSource(std::string const &name) : _name(name) {
 	for (std::size_t i = 0; i < 4; i++)
 		_slots[i] = NULL;
 }
 
-MateriaSource::MateriaSource(MateriaSource const &other) {
-	*this = other;
+MateriaSource::MateriaSource(MateriaSource const &other) : _name(other._name) {
+	for (size_t i = 0; i < 4; i++) {
+		if (other._slots[i])
+			_slots[i] = other._slots[i]->clone();
+		else
+			_slots[i] = NULL;
+	}
 }
 
 MateriaSource::~MateriaSource(void) {
@@ -29,10 +34,10 @@ MateriaSource	&MateriaSource::operator=(MateriaSource const &other) {
 
 	_name = other._name;
 	for (std::size_t i = 0; i < 4; i++) {
-		if (!other._slots[i])
-			continue;
 		delete _slots[i];
-		_slots[i] = other._slots[i]->clone();
+		_slots[i] = NULL;
+		if (other._slots[i])
+			_slots[i] = other._slots[i]->clone();
 	}
 	return *this;
 }
@@ -41,21 +46,21 @@ std::string	MateriaSource::getName(void) const {
 	return _name;
 }
 
-// BUG : passin new AMateria leak
 void	MateriaSource::learnMateria(AMateria *m) {
 	if (!m)
-		return ; // TODO : print a message
-
-	size_t	i = 0;
-	while (i < 4 && _slots[i])
-		i++;
-	if (i >= 4) {
-		std::cout << getName() << "is full" << std::endl;
 		return;
+
+	for (size_t i = 0; i < 4; i++) {
+		if (!_slots[i]) {
+			_slots[i] = m->clone();
+			std::cout << getName() << " stored " << m->getType();
+			std::cout << " at the"; std::cout << i+1 << "th slot" << std::endl;
+			delete m;
+			return;
+		}
 	}
-	std::cout << getName() << " stored " << m->getType() << " at the";
-	std::cout << i+1 << "th slot" << std::endl;
-	_slots[i] = m;
+	std::cout << getName() << " is full" << std::endl;
+	delete m;
 }
 
 void	MateriaSource::deleteMateria(int idx) {
